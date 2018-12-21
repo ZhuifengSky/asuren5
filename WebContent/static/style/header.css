@@ -1,0 +1,118 @@
+body{
+	margin: 0 auto;
+	width: 100%;
+	background-color: #f4f4f4;
+}
+#header {
+	margin: 0 auto;
+	width: 100%;
+    z-index: 10;
+    height: 90px;
+    top:0;
+    position:fixed;/*鍥哄畾浣滅敤*/
+    /*ie6涓嬫牱寮忥紝鍔犱笅鍒掔嚎琛ㄧず鍙拡瀵筰e6 鐨刪ack */
+    _position:absolute;/* 鎶婂鑸爮浣嶇疆瀹氫箟涓虹粷瀵逛綅缃�  鍏抽敭*/
+    _top:expression(documentElement.scrollTop + "px"); /* 鎶婂鑸爮浣嶇疆鏀惧湪娴忚鍣ㄥ瀭鐩存粴鍔ㄦ潯鐨勯《绔�  鍏抽敭 */
+    z-index:9999; /* 璁╁鑸爮娴湪缃戦〉鐨勯珮灞備綅缃紝閬囧埌flash鍜屽浘鐗囨椂鍊欎篃鑳藉缁堜繚鎸佹渶澶栧眰 */
+}
+li{
+    list-style: none;
+    text-align:center;
+}
+a {
+	text-decoration: none;
+	font-family: "raleway-regular", arial;
+	text-align:center;
+}
+#topMenu{
+	background: #3b3b3b;
+    padding-right: 20px;
+    height: 30px;
+}
+#loginReg ul {
+	float: right;
+	height: 30px;
+	margin-top: 0px;
+	z-index:9999;
+}
+#topMenu li {	
+    float: left;
+    padding-left:5px;
+    text-align: center;
+}
+
+#topMenu a {	
+	color: white;
+	font-size: 13px;
+}
+#welcome{
+   font-family: "raleway-regular", arial;
+   color: white;
+   font-size: 13px;
+   margin-top: 4px;
+   float: right;
+   padding-right: 20px;
+}
+
+#column {
+	margin: 0 auto;
+	width: 95%;
+    height: 56px;
+    text-align: center;
+    background-color: white;
+
+}
+#logo{
+    margin-top: 7px;
+    margin-left: 40px;
+    float: left;
+    height: 48px;
+    width: 12%;
+}
+
+#nav{
+    float: right;
+    width: 73%;
+}
+#nav > li{
+    float: left;
+    margin-right:3%;
+    text-align:center;
+}
+
+#nav > li > a{
+    color: #5e5d5d;
+    font-size: 16px;
+    height: 30px;
+    width: 100px;
+    display: block;
+}
+#nav > li > ul > li a{   
+    display: block;
+    color: #5e5d5d;
+    font-size: 16px;
+    height: 25px;
+    width: 100px;
+    background-color:#F2F2F2;
+    
+}
+#nav > li a:hover,.choice{
+    background:white;
+    margin-top: 3px;
+    color: #ff4242;
+}
+ul > li > ul{
+    display: none;
+}
+ul > li.on > ul{
+    display: table-footer-group;
+}
+#nav li{
+    position: relative;
+}
+#nav > li > ul > li ul{
+    position:absolute;
+    top: 0;
+    right: -100px;
+}
+

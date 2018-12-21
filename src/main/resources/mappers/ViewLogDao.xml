@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.service.modules.sys.dao.ViewLogDao">
+  <resultMap id="BaseResultMap" type="cn.service.modules.sys.model.ViewLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="main_id" jdbcType="INTEGER" property="mainId" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, main_id, type, ip, user_id, create_date
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from view_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from view_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.service.modules.sys.model.ViewLog">
+    insert into view_log (id, main_id, type, 
+      ip, user_id, create_date
+      )
+    values (#{id,jdbcType=INTEGER}, #{mainId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, 
+      #{ip,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.service.modules.sys.model.ViewLog">
+    insert into view_log
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mainId != null">
+        main_id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="mainId != null">
+        #{mainId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.service.modules.sys.model.ViewLog">
+    update view_log
+    <set>
+      <if test="mainId != null">
+        main_id = #{mainId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.service.modules.sys.model.ViewLog">
+    update view_log
+    set main_id = #{mainId,jdbcType=INTEGER},
+      type = #{type,jdbcType=VARCHAR},
+      ip = #{ip,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findList" parameterType="cn.service.modules.sys.model.ViewLog" resultMap="BaseResultMap">
+      select 
+    <include refid="Base_Column_List" />
+    from view_log
+    <where>
+	    <if test="type!=null and type!=''">
+	        and type = #{type}
+	    </if>
+	    <if test="userId!=null and userId!=0">
+	        and user_id = #{userId}
+	    </if>
+	    <if test="ip!=null and ip!=''">
+	        and ip = #{ip}
+	    </if>
+	     <if test="createDateFrom!=null and createDateFrom!=''">
+	        and create_date <![CDATA[ >= ]]>#{createDateFrom}
+	    </if>
+	     <if test="createDateTo!=null and createDateTo!=''">
+	        and create_date <![CDATA[ <= ]]>#{createDateTo}
+	    </if>
+	    
+	    and main_id =#{mainId}
+    </where>
+  </select>
+</mapper>

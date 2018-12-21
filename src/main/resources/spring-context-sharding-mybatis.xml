@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" 
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:rdb="http://www.dangdang.com/schema/ddframe/rdb"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+     http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc
+		http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee
+		http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx
+		http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/util
+		http://www.springframework.org/schema/util/spring-util-4.0.xsd
+		http://www.springframework.org/schema/task
+		http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.dangdang.com/schema/ddframe/rdb
+		http://www.dangdang.com/schema/ddframe/rdb/rdb.xsd">
+
+	<!-- 定义连接池方式的数据源 -->
+	<bean id="abstractDataSource"  abstract="true">
+		<property name="driverClass" value="${jdbc.driverClassName}" />
+		<property name="user" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+    	<property name="testConnectionOnCheckin" value="false"/>
+    	<property name="testConnectionOnCheckout" value="true"/>
+    	<property name="preferredTestQuery" value="SELECT 1"/>
+		<property name="initialPoolSize" value="10" />
+		<property name="minPoolSize" value="10" />
+		<property name="maxPoolSize" value="150" />
+		<property name="acquireIncrement" value="1" />
+		<property name="maxIdleTime" value="6000" />
+		<property name="maxStatements" value="0" />
+	</bean>
+	<!--主库-->
+	<bean id="masterDS" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close" parent="abstractDataSource">
+		<property name="jdbcUrl" value="${master.jdbc.url}" />
+	</bean>
+	<!--从库-->
+	<bean id="slaveDS" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close" parent="abstractDataSource">
+		<property name="jdbcUrl" value="${slave.jdbc.url}" />
+	</bean>
+	<!--主库SqlFactory-->
+	<bean id="masterSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="masterDS" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+
+	</bean>
+	<!--从库SqlFactory-->
+	<bean id="slaveSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="slaveDS" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+
+	</bean>
+
+	<!--主库分表SqlSessionFactory-->
+	<bean id="shardingMasterSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSourceMaster" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+
+	</bean>
+
+	<!--从库分表SqlSessionFactory-->
+	<bean id="shardingSlaveSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSourceSlave" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+
+	</bean>
+
+	<!--从库分表SqlSessionFactory-->
+	<bean id="shardingSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="shardingDataSource" />
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="mapperLocations" value="classpath:mappers/*.xml"/>
+		<property name="plugins">
+			<array>
+				<bean class="com.github.pagehelper.PageHelper">
+					<property name="properties">
+						<value>
+							dialect=mysql
+						</value>
+					</property>
+				</bean>
+			</array>
+		</property>
+
+	</bean>
+
+
+	<rdb:strategy id="userTableStrategy" sharding-columns="id" algorithm-expression="user_{id.longValue() % 5}"/>
+
+	<rdb:data-source id="shardingDataSource">
+		<rdb:sharding-rule data-sources="masterDS,slaveDS" default-data-source="masterDS">
+			<rdb:table-rules>
+				<rdb:table-rule logic-table="user" actual-tables="user_0,user_1,user_2,user_3,user_4" table-strategy="userTableStrategy"/>
+				<!--<rdb:table-rule logic-table="user" actual-tables="user_${0..5}" table-strategy="userTableStrategy"/>-->
+			</rdb:table-rules>
+			<rdb:default-database-strategy sharding-columns="none" algorithm-class="com.dangdang.ddframe.rdb.sharding.api.strategy.database.NoneDatabaseShardingAlgorithm"/>
+		</rdb:sharding-rule>
+	</rdb:data-source>
+
+    <rdb:data-source id="shardingDataSourceMaster">
+        <rdb:sharding-rule data-sources="masterDS">
+            <rdb:table-rules>
+            	<!--<rdb:table-rule logic-table="user" actual-tables="user_${0..5}" table-strategy="userTableStrategy"/>-->
+				<rdb:table-rule logic-table="user" actual-tables="user_0,user_1,user_2,user_3,user_4" table-strategy="userTableStrategy"/>
+			</rdb:table-rules>
+            <rdb:default-database-strategy sharding-columns="none" algorithm-class="com.dangdang.ddframe.rdb.sharding.api.strategy.database.NoneDatabaseShardingAlgorithm"/>
+        </rdb:sharding-rule>
+    </rdb:data-source>
+
+    <rdb:data-source id="shardingDataSourceSlave">
+        <rdb:sharding-rule data-sources="slaveDS">
+            <rdb:table-rules>
+            	<!--<rdb:table-rule logic-table="user" actual-tables="user_${0..5}" table-strategy="userTableStrategy"/>-->
+				<rdb:table-rule logic-table="user" actual-tables="user_0,user_1,user_2,user_3,user_4" table-strategy="userTableStrategy"/>
+			</rdb:table-rules>
+            <rdb:default-database-strategy sharding-columns="none" algorithm-class="com.dangdang.ddframe.rdb.sharding.api.strategy.database.NoneDatabaseShardingAlgorithm"/>
+        </rdb:sharding-rule>
+    </rdb:data-source>
+
+	<bean id="sqlSessionFactoryMap" class="java.util.HashMap">
+		<constructor-arg>
+			<map key-type="java.lang.String">
+				<entry key="master" value-ref="masterSqlSessionFactory"/>
+				<entry key="slave" value-ref="slaveSqlSessionFactory"/>
+				<entry key="sharding" value-ref="shardingSqlSessionFactory"/>
+				<entry key="shardingMaster" value-ref="shardingMasterSqlSessionFactory"/>
+				<entry key="shardingSlave" value-ref="shardingSlaveSqlSessionFactory"/>
+			</map>
+		</constructor-arg>
+	</bean>
+
+	<bean id="sqlSessionFactoryBuilder" class="cn.service.common.util.SqlSessionFactoryBuilder" init-method="init">
+		<property name="sqlSessionFactoryMap" ref="sqlSessionFactoryMap" />
+	</bean>
+
+</beans>

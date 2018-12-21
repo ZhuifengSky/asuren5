@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.service.modules.user.dao.UserDao">
+  <resultMap id="BaseResultMap" type="cn.service.modules.user.model.User">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="userName" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+     <result column="salt" jdbcType="VARCHAR" property="salt" />
+    <result column="gender" jdbcType="VARCHAR" property="gender" />
+    <result column="mobile" jdbcType="VARCHAR" property="mobile" />
+    <result column="mobile_bound" jdbcType="BIT" property="mobileBound" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="email_verified" jdbcType="BIT" property="emailVerified" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="login_ip" jdbcType="VARCHAR" property="loginIp" />
+    <result column="login_date" jdbcType="TIMESTAMP" property="loginDate" />
+    <result column="state" jdbcType="BIT" property="state" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, username,salt, password, gender, mobile, mobile_bound, email, email_verified, avatar, 
+    create_ip, create_date, login_ip, login_date, state
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.service.modules.user.model.User">
+    insert into user (id, username, password, 
+      gender, mobile, mobile_bound, 
+      email, email_verified, avatar, 
+      create_ip, create_date, login_ip, 
+      login_date, state)
+    values (#{id,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{gender,jdbcType=VARCHAR}, #{mobile,jdbcType=VARCHAR}, #{mobileBound,jdbcType=BIT}, 
+      #{email,jdbcType=VARCHAR}, #{emailVerified,jdbcType=BIT}, #{avatar,jdbcType=VARCHAR}, 
+      #{createIp,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{loginIp,jdbcType=VARCHAR}, 
+      #{loginDate,jdbcType=TIMESTAMP}, #{state,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.service.modules.user.model.User" keyProperty="id" useGeneratedKeys="true">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userName != null">
+        username,
+      </if>
+       <if test="salt != null">
+        salt,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="gender != null">
+        gender,
+      </if>
+      <if test="mobile != null">
+        mobile,
+      </if>
+      <if test="mobileBound != null">
+        mobile_bound,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="emailVerified != null">
+        email_verified,
+      </if>
+      <if test="avatar != null">
+        avatar,
+      </if>
+      <if test="createIp != null">
+        create_ip,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="loginIp != null">
+        login_ip,
+      </if>
+      <if test="loginDate != null">
+        login_date,
+      </if>
+      <if test="state != null">
+        state,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null">
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="salt != null">
+        #{salt,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileBound != null">
+        #{mobileBound,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailVerified != null">
+        #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="avatar != null">
+        #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createIp != null">
+        #{createIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null">
+        #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        #{state,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.service.modules.user.model.User">
+    update user
+    <set>
+      <if test="userName != null">
+        username = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="gender != null">
+        gender = #{gender,jdbcType=VARCHAR},
+      </if>
+      <if test="mobile != null">
+        mobile = #{mobile,jdbcType=VARCHAR},
+      </if>
+      <if test="mobileBound != null">
+        mobile_bound = #{mobileBound,jdbcType=BIT},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="emailVerified != null">
+        email_verified = #{emailVerified,jdbcType=BIT},
+      </if>
+      <if test="avatar != null">
+        avatar = #{avatar,jdbcType=VARCHAR},
+      </if>
+      <if test="createIp != null">
+        create_ip = #{createIp,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginIp != null">
+        login_ip = #{loginIp,jdbcType=VARCHAR},
+      </if>
+      <if test="loginDate != null">
+        login_date = #{loginDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="state != null">
+        state = #{state,jdbcType=BIT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.service.modules.user.model.User">
+    update user
+    set username = #{userName,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      gender = #{gender,jdbcType=VARCHAR},
+      mobile = #{mobile,jdbcType=VARCHAR},
+      mobile_bound = #{mobileBound,jdbcType=BIT},
+      email = #{email,jdbcType=VARCHAR},
+      email_verified = #{emailVerified,jdbcType=BIT},
+      avatar = #{avatar,jdbcType=VARCHAR},
+      create_ip = #{createIp,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      login_ip = #{loginIp,jdbcType=VARCHAR},
+      login_date = #{loginDate,jdbcType=TIMESTAMP},
+      state = #{state,jdbcType=BIT}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="findUser" parameterType="cn.service.modules.user.model.User" resultMap="BaseResultMap">
+	  	select 
+	  	    <include refid="Base_Column_List" /> 
+	  	from user
+	  	<where>
+	  	   <if test="userName!=null and userName!=''">
+	  	      and username=#{userName}
+	  	   </if>
+	  	   <if test="mobile!=null and mobile!=''">
+	  	      and mobile=#{mobile}
+	  	   </if>
+	  	   <if test="email!=null and email!=''">
+	  	      and email=#{email}
+	  	   </if>
+	  	</where>
+  </select>
+</mapper>

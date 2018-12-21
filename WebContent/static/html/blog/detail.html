@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>小武小站</title>
+<link rel="shortcut icon" href="../../image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="../../style/base.css">
+<link rel="stylesheet" type="text/css" href="../../style/blog.css">
+<link rel="stylesheet" type="text/css" href="../../style/index.css">
+<link rel="stylesheet" href="../../style/jquery.pagination.css" />
+<script type="text/javascript" src="../../js/header.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var blogId = GetQueryString("id");
+		var projectPath=getContextPath();
+		$.ajax({
+	    	url:projectPath+"/api/blog/viewDetail",
+	        type:"GET",
+	        dataType:'json',
+	        async: false,
+	        data: 'blogId='+blogId, 
+	        success:function(result){
+	        	if (result!= null) {
+	        		if (result.code!='1000') {
+	  	        	  // alert(result.info);
+	  			    }else{
+	  			    	var article="";
+	  			    	article+=" <h1 class='title_top'>"+result.data.title+"</h1>";
+	  			    	article+=" <div class='article_bar clearfix'><div class='artical_tag'>";
+	  			    	if(result.data.type=='original'){
+	  			    		article+=" <span class='original' style='margin-right: 10px;'>原创</span>";
+	  			    	}
+	  			    	if(result.data.type=='repost'){
+	  			    		article+=" <span class='repost' style='margin-right: 10px;'>转载</span>";
+	  			    	}	  			    	
+	  			    	article+=" <span class='time' style='margin-right: 10px;'>"+result.data.updateDate+"</span>";
+	  			    	article+=" <span style='margin-right: 10px;'>分类："+result.data.categoryBean.categoryName+"</span>";
+	  			    	article+=" <ul class='right_bar'><li><span class='viewnum f_r'>"+result.data.viewNum+"</span>&nbsp;&nbsp;&nbsp;&nbsp;<span class='pingl f_r'>"+result.data.commentNum+"</span></li></ul>";
+	  			    	article+=" </div></div>";
+	  			    	article+=" <div id='article_content'  style='padding:30px 40px 40px 40px;margin-bottom: 40px;' data-mod='popu_519' data-dsm='post'>";
+	  			    	article+=" <div>"+result.data.content+"</div>";
+	  			    	article+=" </div>";  
+	  			    	$("#article").html(article);	  			    	
+	  			    	var author="";
+	  			    	author+=" <div id='imgArea'><h4 class='panel_head'>个人资料</h4>";
+	  			    	author+=" <img id='avatar' alt='' src='"+result.data.userBean.avatar+"#'>";
+	  			    	author+="<p class='panel_head'>"+result.data.userBean.userName+"</p></div>"
+	  			    	$("#author").html(author);
+	  			    	 
+	  			    }  	        		
+				} else {
+					alert("请求失败!")
+				}	              	
+	        },
+	        error:function(e){
+	          alert("发生错误！！");
+	        } 
+	      });
+	});
+	
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+</script>
+</head>
+<body>
+	<div id="container" style="margin-top: 100px;">
+	    <div id="article">
+            
+		                <!-- <li class="edit" style="display: list-item;">
+		                    <a class="btn-noborder" href="#">
+		                        <i class="icon iconfont icon-bianji"></i><span class="txt">编辑</span>
+		                    </a>
+		                </li>
+		                <li class="del" style="display: list-item;">
+		                    <a class="btn-noborder" onclick="javascript:deleteArticle(fileName);return false;">
+		                        <i class="icon iconfont icon-shanchu"></i><span class="txt">删除</span>
+		                    </a>
+		                </li> -->	     
+	    </div>
+	    <div id="author"></div>
+	</div>
+	<iframe src="../sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="../../js/jquery-3.2.1.min.js"></script>
+	<script src="../../js/pgwslider.min.js"></script>
+	<script src="../../js/jquery.pagination.min.js"></script>
+</body>
+</html>

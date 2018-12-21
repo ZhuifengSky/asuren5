@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>留言板</title>
+<link rel="shortcut icon" href="../../image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="../../style/base.css">
+<link rel="stylesheet" type="text/css" href="../../style/messageBoard/messageBoard.css">
+<link rel="stylesheet" href="../../js/layui-master/src/css/layui.css">
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="../../style/jquery.pagination.css" />
+<script src="../../js/layui-master/src/layui.js"></script>
+<script type="text/javascript" src="../../js/header.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){		
+	 var projectPath=getContextPath();
+	 $.ajax({
+	    	url:projectPath+"/api/sys/getDailyWords",
+	        type:"GET",
+	        dataType:'json',
+	        async: false,
+	        data: null, 
+	        success:function(result){
+	        	if (result!= null) {
+	        		if (result.code!='1000') {
+	  	        	  // alert(result.info);
+	  			    }else{
+	  			    	var dailyWordsBean = eval(result.data);// 转换为json对象
+	  			    	var todayWords=dailyWordsBean.dailyWords.words;
+						if(todayWords!=null && todayWords!='' && todayWords.length>200){
+							todayWords=todayWords.substring(0,200)+"...";
+						}
+						var dailyWords="<p id='"+dailyWordsBean.showType+"'>"+todayWords+"</p>";
+						$("#dailyWordsArea").html(dailyWords);
+	  			    }
+				} else {
+					alert("请求失败!")
+				}	              	
+	        },
+	        error:function(e){
+	          alert("发生错误！！-index");
+	        } 
+	      });
+	/*
+	 *  参数详解:
+	 *	upTime			上移的时间
+	 *	downTime		下落的时间
+	 *	beatHeight		上移高度
+	 *	isAuth			是否自动
+	 *	isRotate		是否旋转
+	 */
+
+	$('p#beatText').beatText({isAuth:false,isRotate:false});
+	$('p#rotateText').beatText({isAuth:false,isRotate:true});
+   goPage();
+});
+
+
+function goPage() {
+	var projectPath=getContextPath();
+	var pageNum=1;
+	var page = GetQueryString("page");
+	if (page!=null && (/(^[1-9]\d*$)/.test(page))) { 
+		pageNum=page;
+	}
+	$.ajax({
+		url:projectPath+"/api/message/getMessages?pageNum="+pageNum,
+        type:"GET",
+        dataType:'json',
+        async: false,
+        data: null, 
+        success:function(result){
+        	if (result!= null) {
+        		if (result.code!='1000') {
+  	        	  // alert(result.info);
+  			    }else{
+  			    	var dataObj = eval(result.data.list);// 转换为json对象
+					var leaveMsg = "";		
+					leaveMsg+= "<h3>留言("+result.data.total+")</h3>";
+					// 遍历json数组
+					$.each(dataObj, function(i, item) {
+						leaveMsg+= "<div class='comment'><div class='authorArea'>";
+						leaveMsg+= "<img src='"+item.avatar+"' alt='头像' class='avator'><span class='userName'>"+item.userName+"</span></div>";
+						leaveMsg+= "<div class='contentArea'><div class='content'>"+item.message+"</div>";
+						leaveMsg+= "<div class='dateInfo'> <span><a href='#'>回复</a></span><span style='padding-left: 10px'>"+item.createDate+"</span>";
+						leaveMsg+= "</div></div></div>";
+					});
+                    $(".comment-show").html(leaveMsg);
+					$("#pagination3").pagination({
+						currentPage: result.data.pageNum,//当前页码
+						totalPage: result.data.pages,//总页数,
+						isShow: true,
+						count: result.data.total,//总数目
+						homePageText: "首页",
+						endPageText: "尾页",
+						prevPageText: "上一页",
+						nextPageText: "下一页",
+						callback: function(current) {
+							window.location.href='messageBoard.html?page='+current;
+						}
+					});
+				}
+			} else {
+				alert("请求失败!")
+			}
+		},
+		error:function(e){
+			alert("发生错误！！");
+		}
+	});
+}
+
+
+layui.use('layedit', function(){
+	  var layedit = layui.layedit;
+	  
+	  var index = layedit.build('message', {
+	    hideTool: ['image'], height: 160, //设置编辑器高度
+	    uploadImage: {
+	      url: 'json/upload/demoLayEdit.json'
+	      ,type: 'get'
+	    }
+	    //,tool: []
+	    //,height: 100
+	  });
+	  
+	  $("#fab").click(function(){
+		  var message=layedit.getContent(index);
+		  var messageText=layedit.getText(index);
+		  if(message==null || message==''){
+			  layer.msg('请输入留言内容~');
+			  return false;
+		  }else{
+			  var projectPath=getContextPath();
+			  $("#message").val(message);
+			  $("#messageText").val(messageText);
+			  $.ajax({
+				  url:projectPath+"/api/message/saveMessage",
+				  type:"post",
+				  dataType:'json',
+				  data: $('#messageForm').serialize(),
+				  success:function(result){
+					  if (result!= null) {
+						  if (result.code!='1000') {
+							  if(result.code=='1111'){
+								  layer.msg("请先登录,3秒后自动跳转！");   
+								  setTimeout(function(){//两秒后跳转  									  
+	                                  location.href = "../login.html";//PC网页式跳转  
+	                              },3000);  
+							  }else{
+							     layer.msg(result.info);
+							  }							  
+						  }else{
+							  layer.msg('发表成功!');
+							  window.location.reload();//刷新当前页面.
+						  }
+					  } else {
+						  alert("请求失败!")
+					  }
+				  },
+				  error:function(e){
+					  alert("发生错误！！-index");
+				  }
+			  });
+		  }
+	  });
+	  
+	});
+function getContextPath() {
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var result = pathName.substr(0, index + 1);
+	return result;
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+</script>
+</head>
+<body>
+	<div class="container">
+	    <div style="margin: 0 auto;margin-top:7%;width: 95%;background-color: white;padding-top: 20px;">
+			<div id="fyi">
+			    <h3>寄语</h3>
+			    <hr>
+			    <span id="dailyWordsArea"></span>
+			</div>
+			<form class="layui-form" id="messageForm" method="post" action="/asuren5/api/message/saveMessage">
+				<textarea name="messageText" id="messageText" style="display: none"></textarea>
+				<div class="layui-form-item">
+			      <textarea id="message" name="message" class="layui-hide"></textarea>
+			    </div>
+			    <input type="button" class="layui-btn" id="fab" value="发表" style="width:  100px;float:  right;">
+		   </form>
+			<div class="comment-show" style="margin:0 auto; width: 95%;padding-bottom: 60px;"></div>
+		    <div class="box" style="text-align: center;">
+					<div id="pagination3" class="page fl"></div>
+			</div>
+		</div>	
+	</div>
+	<iframe src="../sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="../../js/jquery.pagination.min.js"></script>
+	<script type="text/javascript" src="../../js/check.js"></script>
+	<script type="text/javascript" src="../../js/jquery.beattext.js"></script>
+	<script type="text/javascript" src="../../js/easying.js"></script>
+</body>
+</html>

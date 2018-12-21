@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>小武小站</title>
+<link rel="shortcut icon" href="/static/image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="/static/style/base.css">
+<link rel="stylesheet" type="text/css" href="/static/style/index.css">
+<link rel="stylesheet" href="/static/style/jquery.pagination.css" />
+<style>
+	#qcode {
+		position:relative;
+		margin:0 auto;
+	}
+	#qqgroup {
+		display:none;
+		overflow:hidden;
+		background:url(/static/image/gzh.jpg) no-repeat;
+		width:150px; height:150px; z-index: 99999;
+	}
+</style>
+<script type="text/javascript" src="/static/js/header.js"></script>
+<script type="text/javascript">
+	$(document).ready(function(){
+		 $.ajax({
+		    	url:"/api/sys/getBanners",
+		        type:"GET",
+		        dataType:'json',
+		        async: false,
+		        data: null, 
+		        success:function(result){
+		        	if (result!= null) {
+		        		if (result.code!='1000') {
+		  	        	  // alert(result.info);
+		  			    }else{
+		  			    	var dataObj = eval(result.data);// 转换为json对象
+							var bannerLists = "";
+							// 遍历json数组
+							$.each(dataObj, function(i, item) {
+								bannerLists+= "<li><a href='"+item.targetUrl+"' target='"+item.targetType+"'><img src='"+item.imageUrl+"' alt='"+item.subTitle+"' data-description='"+item.title+"'></a></li>";
+							});
+	                       $(".pgwSlider").html(bannerLists);
+	                       $('.pgwSlider').pgwSlider();
+		  			    }  	        		
+					} else {
+						alert("请求失败!")
+					}	              	
+		        },
+		        error:function(e){
+		          alert("发生错误！！-index");
+		        } 
+		      });
+		 
+		 $.ajax({
+		    	url:"/api/sys/index",
+		        type:"GET",
+		        dataType:'json',
+		        async: false,
+		        data: null, 
+		        success:function(result){
+		        	if (result!= null) {
+		        		if (result.code!='1000') {
+		  	        	  // alert(result.info);
+		  			    }else{
+		  			    	var hotBlogBeans = eval(result.data.hotBlogs);// 转换为json对象
+		  			    	var newBlogBeans = eval(result.data.newBlogs);// 转换为json对象
+		  			    	var recommendBlogBeans = eval(result.data.recommendBlogs);// 转换为json对象
+							var messageBoardBeans = eval(result.data.messageBoards);// 转换为json对象
+							var dailyWordsBean = eval(result.data.dailyWords);// 转换为json对象
+							var hotBlogs = "";
+							hotBlogs+="<ul>"
+							// 遍历json数组
+							$.each(hotBlogBeans, function(i, item) {
+								hotBlogs+= "<li><a href='blog/detail.html?id="+item.id+"' target='_blank'>"+item.title+"</a></li>"
+							});
+							hotBlogs+="</ul>"
+	                       $("#hotBlogs").html(hotBlogs);
+
+							var newBlogs = "";
+							newBlogs+="<ul>"
+							// 遍历json数组
+							$.each(newBlogBeans, function(i, item) {
+								newBlogs+= "<li><a href='blog/detail.html?id="+item.id+"' target='_blank'>"+item.title+"</a></li>"
+							});
+							newBlogs+="</ul>"
+							$("#newBlogs").html(newBlogs);
+
+							var recommendBlogs = "";
+							recommendBlogs+="<ul>"
+							// 遍历json数组
+							$.each(recommendBlogBeans, function(i, item) {
+								recommendBlogs+= "<li><a href='blog/detail.html?id="+item.id+"' target='_blank'>"+item.title+"</a></li>"
+							});
+							recommendBlogs+="</ul>"
+							$("#recommendBlogs").html(recommendBlogs);
+							var messageBoards = "";
+							messageBoards+="<ul>"
+							// 遍历json数组
+							$.each(messageBoardBeans, function(i, item) {
+								var msg=item.messageText;
+								if(msg!=null && msg!='' && msg.length>15){
+									msg=msg.substring(0,15)+"...";
+								}
+								messageBoards+= "<li><img src='"+item.avatar+"'><div style='text-align: left'>"
+									       +"<p>"+msg+"</p><span>"+item.userName+"&nbsp;留言于&nbsp;"+item.createDate+"</span></div></li>"
+							});
+							recommendBlogs+="</ul>"
+							$("#messageBoards").html(messageBoards);
+							var dailyWords = eval(dailyWordsBean.dailyWords);
+							var todayWords=dailyWords.words;
+							if(todayWords!=null && todayWords!='' && todayWords.length>200){
+								todayWords=todayWords.substring(0,200)+"...";
+							}
+							var dailyWords="<p id='"+dailyWordsBean.showType+"'>"+todayWords+"</p>";
+							$("#today_words").html(dailyWords);
+		  			    }
+					} else {
+						alert("请求失败!")
+					}	              	
+		        },
+		        error:function(e){
+		          alert("发生错误！！-index");
+		        } 
+		      });
+		/*
+		 *  参数详解:
+		 *	upTime			上移的时间
+		 *	downTime		下落的时间
+		 *	beatHeight		上移高度
+		 *	isAuth			是否自动
+		 *	isRotate		是否旋转
+		 */
+
+		$('p#beatText').beatText({isAuth:false,isRotate:false});
+		$('p#rotateText').beatText({isAuth:false,isRotate:true});
+
+        goPage();
+	});
+
+	
+	function goPage() {
+		var pageNum=1;
+		var page = GetQueryString("page");
+		if (page!=null && (/(^[1-9]\d*$)/.test(page))) { 
+			pageNum=page;
+		}
+		$.ajax({
+			url:"/api/blog/getBlogs?pageNum="+pageNum,
+			type:"GET",
+			dataType:'json',
+			async: false,
+			data: null,
+			success:function(result){
+				if (result!= null) {
+					if (result.code!='1000') {
+						// alert(result.info);
+					}else{
+						var dataObj = eval(result.data.list);// 转换为json对象
+						var blogList = "";
+						// 遍历json数组
+						$.each(dataObj, function(i, item) {
+							blogList+="<a href='blog/detail.html?id="+item.id+"' target='_blank' style='text-align: left;'><h3>"+item.title+"</h3>"
+									+"<div class='wz'>";
+							if (item.imageUrl!=null && item.imageUrl!='') {
+								blogList+="<figure><img src='"+item.imageUrl+"' alt='"+item.title+"'></figure>"
+							}							
+							blogList+="<ul>"
+									+"<p>"+item.shortDesc+"</p>"
+									+"</ul>"
+									+"</div></a>"
+									+"<p class='dateview'><span>"+item.updateDate+"</span><span>作者："+item.userBean.userName+"</span>"
+									+"<span>[<a href='/jstt/bj/'>"+item.categoryBean.categoryName+"</a>]</span><span class='viewnum f_r'>浏览（<a href='/'>"+item.viewNum+"</a>）</span>"
+									+"<span class='pingl f_r'>评论（<a href='/'>"+item.commentNum+"</a>)</span></p>";
+						});
+						$(".bloglist").html(blogList);
+						$("#pagination3").pagination({
+							currentPage: result.data.pageNum,//当前页码
+							totalPage: result.data.pages,//总页数,
+							isShow: true,
+							count: result.data.total,//总数目
+							homePageText: "首页",
+							endPageText: "尾页",
+							prevPageText: "上一页",
+							nextPageText: "下一页",
+							callback: function(current) {
+								window.location.href='index.html?page='+current;
+							}
+						});
+					}
+				} else {
+					alert("请求失败!")
+				}
+			},
+			error:function(e){
+				alert("发生错误！！");
+			}
+		});
+	}
+	
+
+	function GetQueryString(name)
+	{
+	     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+	     var r = window.location.search.substr(1).match(reg);
+	     if(r!=null)return  unescape(r[2]); return null;
+	}
+
+	function showwx()
+	{
+		$("#qqgroup").css('display','block');
+
+	}
+	function hidwx()
+	{
+		$("#qqgroup").css('display','none');
+	}
+</script>
+</head>
+<body>
+	<div id="container">
+	   <div id="top">
+		<div class="banner">
+			<ul class="pgwSlider">
+					<!-- <li><a href="#" target="_blank"><img src="../image/paris.jpg" alt="Paris, France" data-description="Eiffel Tower and Champ de Mars"></a></li>
+					<li><a href="#" target="_blank"><img src="../image/shanghai.jpg"> <span>Shanghai, China</span></a></li> -->					
+			</ul>
+        </div>
+        <div class="tit01">
+	      <h3 class="right_bt">关注我</h3>
+	      <div class="gzwm">
+	        <ul>
+	          <li><a class="xlwb" href="https://weibo.com/u/6022150893" target="_blank">新浪微博</a></li>
+	          <li>
+				  <div class="ma wx" onmouseover="showwx()" onmouseout="hidwx()">公众号</div>
+				  <div id="qcode" class="center"><div id="qqgroup"></div></div>
+			  </li>
+	          <li><a class="yx" href="mailto:2519772528@qq.com">邮箱</a></li>
+	        </ul>
+	      </div>
+        </div>
+		<!--tit01 end-->
+		</div>
+	   <div class="content" style="min-height: 900px;">
+			<div id="left">
+			    <div id="wzlist"><h3 class="right_bt">文章列表</h3></div>
+				<div class="bloglist f_l"></div>
+				<div id="app">
+					<pageination :total="model.total" :size="model.size" :page="model.page" :changge="pageFn" ></pageination>
+				</div>
+				<div class="box" style="text-align: center;">
+					<div id="pagination3" class="page fl"></div>
+			    </div>
+			</div>
+			<div id="right">
+				<div class="dailyWords">
+					<h3 class="right_bt" style="padding-left: 30px;">每日一语</h3>
+					<div id="today_words"></div>
+				</div>
+			<!--tit01 end-->
+				<div class="moreSelect" id="lp_right_select">
+					<script>
+						window.onload = function ()
+						{
+							var oLi = document.getElementById("tab").getElementsByTagName("li");
+							var oUl = document.getElementById("ms-main").getElementsByTagName("div");
+
+							for(var i = 0; i < oLi.length; i++)
+							{
+								oLi[i].index = i;
+								oLi[i].onmouseover = function ()
+								{
+									for(var n = 0; n < oLi.length; n++) oLi[n].className="";
+									this.className = "cur";
+									for(var n = 0; n < oUl.length; n++) oUl[n].style.display = "none";
+									oUl[this.index].style.display = "block"
+								}
+							}
+						}
+					</script>
+					<div class="ms-top">
+						<ul class="hd" id="tab">
+							<li class="cur"><a href="#">点击排行</a></li>
+							<li><a href="#">最新文章</a></li>
+							<li><a href="#">站长推荐</a></li>
+						</ul>
+					</div>
+					<div class="ms-main" id="ms-main">
+						<div style="display: block;" class="bd bd-news" id="hotBlogs"></div>
+						<div  class="bd bd-news" id="newBlogs"></div>
+						<div class="bd bd-news" id="recommendBlogs"></div>
+					</div>
+					<!--ms-main end -->
+				</div>
+				<div class="toppic">
+					<h3 class="right_bt" style="text-align:left;height: 20px;padding-left: 30px;">最新留言</h3>
+					<div id="messageBoards"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<iframe src="/static/html/sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script src="/static/js/pgwslider.min.js"></script>
+	<script src="/static/js/jquery.pagination.min.js"></script>
+	<script type="text/javascript" src="/static/js/check.js"></script>
+	<script type="text/javascript" src="/static/js/jquery.beattext.js"></script>
+	<script type="text/javascript" src="/static/js/easying.js"></script>
+</body>
+</html>

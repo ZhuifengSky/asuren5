@@ -1,0 +1,265 @@
+.pgwSlider {
+	width: 100%;
+	height: auto;
+}
+
+.pgwSlider .ps-current {
+	float: left;
+	width: 74%;
+	overflow: hidden;
+	height: inherit;
+	position: relative;
+	font-size: 1rem;
+}
+
+.pgwSlider .ps-current span {
+	position: absolute;
+	width: 100%;
+	padding: 8px 10px 10px;
+	background: rgba(0, 0, 0, 0.7);
+	left: 0;
+	bottom: 0;
+	color: #fff;
+}
+
+.pgwSlider .ps-current img {
+	max-width: 100%;
+	min-width: 100%;
+	height: auto;
+	display: block;
+}
+
+ul.pgwSlider, .pgwSlider>ul {
+	float: right;
+	width: 25%;
+	padding: 0;
+	list-style: none;
+	margin: 0;
+}
+
+ul.pgwSlider>li, .pgwSlider>ul>li {
+	height: 50px;
+	margin-bottom: 6px;
+	overflow: hidden;
+	position: relative;
+	opacity: 0.6;
+	filter: alpha(opacity = 60);
+	font-size: 0.8rem;
+}
+
+ul.pgwSlider>li:last-child, .pgwSlider>ul>li:last-child {
+	margin-bottom: 0;
+}
+
+ul.pgwSlider>li span, .pgwSlider>ul>li span {
+	display: block;
+	width: 100%;
+	position: absolute;
+	bottom: 0;
+	padding: 3px 0 5px 5px;
+	color: #fff;
+	background: rgba(0, 0, 0, 0.7);
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+ul.pgwSlider>li:hover, .pgwSlider>ul>li:hover {
+	opacity: 1 !important;
+}
+
+ul.pgwSlider>li img, .pgwSlider>ul>li img {
+	width: 100%;
+	min-height: 100%;
+	display: block;
+}
+
+@media ( min-width : 481px) {
+	ul.pgwSlider>li, .pgwSlider>ul>li {
+		width: 100% !important;
+	}
+}
+
+@media ( max-width : 480px) {
+	.pgwSlider .ps-current {
+		margin-bottom: 6px;
+		font-size: 0.9rem;
+	}
+	.pgwSlider .ps-current img {
+		width: 100%;
+		min-height: inherit;
+	}
+	.pgwSlider .ps-current, ul.pgwSlider, .pgwSlider>ul {
+		width: 100%;
+	}
+	ul.pgwSlider>li, .pgwSlider>ul>li {
+		float: left;
+		min-height: 50px;
+		max-height: 70px;
+		min-width: 20%;
+	}
+	ul.pgwSlider>li span, .pgwSlider>ul>li span {
+		white-space: nowrap;
+	}
+}
+#top{
+   background-color: white;
+	margin-top: 9%;
+}
+.banner{
+	width: 64%;
+	float: left;
+	background-color: white;
+}
+.tit01{
+	width: 34%;
+	float: right;
+	background-color: white;
+	height: 180px;
+}
+.tit01 h3{
+	padding-left: 30px;
+}
+.right_bt{
+	border-bottom: solid 1px #EAEAEA;
+	padding-bottom: 10px;
+}
+/* 关注我样式 */
+.gzwm ul { width: 100%; margin: 30px 0; overflow: hidden }
+.gzwm li { width: 85px; margin: 0 8% 0 5px; float: left; }
+.gzwm li a { color: #747F8C; width: 58px; text-align: center; padding-top: 60px; float: left; }
+.gzwm .yx { background: url(../image/yxa.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .yx:hover { color: #000; background: url(../image/yx.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb { background: url(../image/weiboa.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .xlwb:hover { color: #000; background: url(../image/weibo.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx { background: url(../image/wxa.png) no-repeat scroll 0% 0% transparent; }
+.gzwm .wx:hover { color: #000; background: url(../image/wx.png) no-repeat scroll 0% 0% transparent; }
+.ma{
+	color: #747F8C;
+	width: 58px;
+	text-align: center;
+	padding-top: 60px;
+}
+
+.dailyWords{
+	background-color: white;
+	min-height: 100px;
+	margin-bottom: 20px;
+	float: right;
+	width: 100%;
+}
+#today_words{
+	font-family: cursive;
+	padding: 1px 20px 20px 35px;
+}
+#left{
+	width: 64%;
+	float: left;
+}
+/*文章*/
+.bloglist {
+	overflow: hidden;
+	margin-bottom: 20px;
+}
+.bloglist h3 {
+	margin: 20px 0 0px 0;
+	color: #333;
+	font-size: 16px;
+	font-family: "微软雅黑";
+	background-color: white;
+    padding-left: 25px;
+    height: 40px;
+    line-height: 40px;
+}
+.wz {
+	width: 100%;
+    min-height: 115px;
+	float: left;
+	background-color: white;
+	font-family: "raleway-regular", arial;
+    font-size: 13px;
+    color: #999;
+}
+
+#wzlist{
+	background-color: white;
+    height: 48px;
+    line-height: 30px;
+    padding-left: 20px;	
+}
+    
+.bloglist figure {
+	float: left;
+	width: 20%;
+}
+.bloglist figure img {
+	border: #f4f2f2 1px solid;
+	width: 160px;
+}
+.bloglist ul {
+	line-height: 20px;
+}
+.dateview {
+	width: 100%;
+	overflow: hidden;
+	clear: both;
+	margin: 10px 0 0 0;
+	display: inline-block;
+	background: #f6f6f6 url(../image/time.jpg) 15px center no-repeat;
+	line-height: 26px;
+	height: 26px;
+	color: #838383;
+	padding-left: 25px;
+	font-size: 12px;
+}
+.dateview span {
+	margin: 0 10px;
+}
+.dateview span a {
+	color: #41607d;
+}
+a.readmore {
+	background: #333;
+	color: #fff;
+	padding: 5px 10px;
+	float: right;
+	margin: 20px 20px;
+}
+.r_box {
+	width: 300px;
+	margin: 20px 20px 0 0
+}
+.tit {
+	line-height: 44px;
+	color: #fff;
+	font-size: 18px;
+	height: 44px;
+	background: url(../image/rtitbg.png) no-repeat;
+	padding-left: 40px;
+	margin: 0 0 10px 0
+}
+#right {
+	width: 34%;
+	float: right;
+	margin-top: 15px;
+}
+.viewnum { background: url(../image/newsbg04.png) no-repeat left center;padding-left: 20px;}
+.pingl { background: url(../image/newsbg03.png) no-repeat left center ; padding-left: 20px;}
+/* 切换卡 */
+.moreSelect {background-color: white;width: 100%; margin: 8px 0 20px 0; overflow: hidden;float: right;}
+.ms-top { height: 32px; border-bottom: solid 1px #EAEAEA; font-size: 14px }
+.ms-main{padding-left: 13px;  padding-bottom: 15px;}
+#tab li a { color:black;float: left; height: 32px; cursor: pointer; line-height: 32px; list-style-type: none; padding: 0 15px; }
+#tab li.cur a { color: #fff; background: #504a47; }
+.bd { display: none }
+.bd-news ul { padding: 10px 0 0 10px; background: url(../image/ph2.png) no-repeat 10px 29px; }
+.bd-news ul li { border-bottom: solid 1px #EAEAEA; line-height: 30px; height: 30px; overflow: hidden; font-size: 14px; padding: 10px 0 0 30px; }
+.bd-news ul li a { display: block; }
+.bd-news ul li a:hover { color: #000; }
+.bd-news ul li:hover { border-bottom: #000 1px solid; }/* 鼠标放上去的效果 */
+.ms-main a {text-align: left;}
+
+.toppic{ width: 100%;text-align: center; padding-top: 2px;	background-color: white; float: right;  padding-bottom: 25px;}
+.toppic li { border-bottom: solid 1px #EAEAEA; height: 70px;width: 100%;}
+.toppic li img {float: left; margin-right: 20px; width: 60px;height: 60px;border-radius: 60px;}
+.toppic li p { color: #666;}
+.toppic li span{ width: 100%; font-size: 11px;  color: #999;}

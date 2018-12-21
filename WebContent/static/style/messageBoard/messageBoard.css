@@ -1,0 +1,61 @@
+#fyi{
+	margin:0 auto; 
+	width: 90%; 
+	min-height: 175px; 
+	padding-left:15px; 
+	border: 1px solid #EDEDED;
+}
+
+#messageForm{
+	margin: 0 auto;
+	width: 90%;
+	padding-top:40px;
+	padding-bottom: 60px;
+}
+
+.comment{
+	border-top: 1px solid #EDEDED;
+	border-bottom: 1px solid #EDEDED;
+    width: 95%;
+    margin: 0 auto;
+    min-height: 150px;
+}
+
+.authorArea{
+	text-align: center;
+    width: 13%;
+    float: left;
+    border-right: 1px solid #EDEDED;"
+    
+}
+
+.contentArea{
+    padding-top: 15px;
+    float: right;
+    width: 86.5%;
+}
+
+.content{
+	padding-left: 30px;
+    min-height: 80px;
+}
+
+.dateInfo{
+    text-align: right;
+    width: 100%;
+    padding-right: 20px;
+    font-size: 10px;
+}
+.avator{
+    float: left;
+    width:120px;
+    height:120px;
+    border-radius:130px;
+    padding-top: 5px;
+}
+
+.userName{
+    float: left;
+    width: 100%;
+    padding-top: 2px;
+}

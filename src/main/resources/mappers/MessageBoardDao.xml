@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.service.modules.messageBoard.dao.MessageBoardDao">
+  <resultMap id="BaseResultMap" type="cn.service.modules.messageBoard.model.MessageBoard">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="message_text" jdbcType="VARCHAR" property="messageText" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.service.modules.messageBoard.bean.MessageBoardBean">
+    <result column="content" jdbcType="VARCHAR" property="content" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, user_id, message_text, create_date
+  </sql>
+  <sql id="Blob_Column_List">
+    message
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from message_board
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from message_board
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.service.modules.messageBoard.model.MessageBoard">
+    insert into message_board (id, user_id, message_text, 
+      create_date, message)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{messageText,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{message,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.service.modules.messageBoard.model.MessageBoard">
+    insert into message_board
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="messageText != null">
+        message_text,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="message != null">
+        message,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="messageText != null">
+        #{messageText,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        #{message,jdbcType=LONGVARBINARY},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.service.modules.messageBoard.model.MessageBoard">
+    update message_board
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="messageText != null">
+        message_text = #{messageText,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null">
+        message = #{message,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.service.modules.messageBoard.model.MessageBoard">
+    update message_board
+    set user_id = #{userId,jdbcType=INTEGER},
+      message_text = #{messageText,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      message = #{message,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.service.modules.messageBoard.model.MessageBoard">
+    update message_board
+    set user_id = #{userId,jdbcType=INTEGER},
+      message_text = #{messageText,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findList" parameterType="cn.service.modules.messageBoard.bean.MessageBoardBean" resultType="cn.service.modules.messageBoard.bean.MessageBoardBean">
+      select b.id,b.user_id as userId,u.username as userName,avatar,b.message_text as messageText,b.message,b.create_date as createDate
+      from  message_board b inner join `user` u on b.user_id=u.id
+      <where>
+         <if test="userId!=null and userId!='' and userId!=0">
+              and b.user_id=#{userId}
+         </if>
+      </where>
+  </select>
+
+</mapper>

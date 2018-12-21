@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	   <!--定义下别名-->
+		<!--<typeAlias  alias="Page" type="xx" /></typeAliases>-->
+		<!--插件配置-->
+		<!--<plugins>
+			<plugin interceptor="xx" />
+	    </plugins>-->
+
+	<!-- 类型别名 -->
+	<!-- <typeAliases> <typeAlias alias="Page" type="com.main.common.bean.Page" 
+		/>分页 </typeAliases> 插件配置 <plugins> <plugin interceptor="com.main.common.persistence.PaginationInterceptor" 
+		/> </plugins> -->
+	<settings>
+		<setting name="lazyLoadingEnabled" value="false" />
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+
+	<!--<typeAliases>
+		<typeAlias type="cn.service.modules.moments.model.Moments" alias="moments"/>
+	</typeAliases>
+	<mappers>
+		<mapper resource="mappers/MomentsDao.xml"/>
+	</mappers>-->
+
+</configuration>

@@ -1,0 +1,61 @@
+body{
+	margin: 0 auto;
+	background-color: #f4f4f4;
+}
+
+.modal-dialog{
+	width: 550px;
+	margin: 180px auto;
+}
+
+.modal-content{
+	border: none;
+	box-shadow: 0 5px 15px rgba(0,0,0,.5);
+	text-align: center;
+}
+
+.modal-title {
+	margin: 0;
+	line-height: 1.42857143;
+}
+.good-tips{
+	padding-left: 15px;
+	float: left;
+}
+.good-tips a{
+	color: #5ecfba;
+	text-decoration: none;
+}
+
+.form-control {
+	width: 80%;
+	height: 30px;
+	padding: 6px 30px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	float: left;
+	margin-bottom: 20px;
+}
+
+.btn{
+	height: 40px;
+	width: 65%;
+	margin-bottom: 32px;
+	background-color: #4AAF33;
+	color: #FFFFFF;
+	border: 1px solid #3EAC27;
+}
+#loginName{
+	background:url(../image/input_username.png) center left no-repeat;
+}
+
+#password{
+	background:url(../image/input_password.png) center left no-repeat;
+}
+.tips-error{
+	text-align: center;
+	color: red;
+	width: 100%;
+	height: 25px;
+	background: url(../image/pwd-icons-new.png) -104px -49px no-repeat #de60603d;
+}

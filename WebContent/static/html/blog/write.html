@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>小武小站</title>
+<link rel="shortcut icon" href="/static/image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="/static/style/base.css">
+<link rel="stylesheet" type="text/css" href="/static/style/blog.css">
+<link rel="stylesheet" type="text/css" href="/static/style/index.css">
+<link rel="stylesheet" href="/static/style/jquery.pagination.css" />
+<script type="text/javascript" src="/static/js/header.js"></script>
+<style type="text/css">
+.sucesli{
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+    width: 100px;
+    float: left;
+    margin-left: 20px;
+}
+
+.sucesa{
+	text-decoration: none;
+    display: block;
+    width: 100px;
+    height: 30px;
+    color: white;
+    background-color: #615c5c;
+}
+</style>
+<script src="/static/js/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="/static/js/kindeditor/themes/default/default.css" />
+<link rel="stylesheet" href="/static/js/kindeditor/plugins/code/prettify.css" />
+<script charset="utf-8" src="/static/js/kindeditor/kindeditor-all-min.js"></script>
+<script charset="utf-8" src="/static/js/kindeditor/lang/zh-CN.js"></script>
+<script charset="utf-8" src="/static/js/kindeditor/plugins/code/prettify.js"></script>
+<link rel="stylesheet" href="/static/js/layui-master/src/css/layui.css">
+<script src="/static/js/layui-master/src/layui.js"></script>
+<script>
+$(document).ready(function(){		
+	 $.ajax({
+	    	url:"/api/category/getMyCategory",
+	        type:"GET",
+	        dataType:'json',
+	        async: false,
+	        data: null, 
+	        success:function(result){
+	        	if (result!= null) {
+	        		if (result.code!='1000') {
+	  	        	  // alert(result.info);
+	  			    }else{
+	  			    	var dataObj = eval(result.data);// 转换为json对象
+						var categoryLists = "";
+						categoryLists+="<label style='font-size: 16px;'>分类：</label>";
+						categoryLists+="<select name='category' id='selCategory'><option value=''>请选择</option>"
+						// 遍历json数组
+						$.each(dataObj, function(i, item) {
+							categoryLists+="<option value='"+item.id+"'>"+item.categoryName+"</option>";
+						});
+						categoryLists+="</select><br>";
+						categoryLists+="<input type='button' id='confirmPost' style='margin-left: 280px;margin-top: 105px;height: 40px;width:100px;background: #312b2b;font-size: 16px;color: #fff;border: none;border-radius: 4px;cursor:pointer;' value='确定发布' >";
+                      $("#categoryArea").html(categoryLists);
+	  			    }  	        		
+				} else {
+					alert("请求失败!")
+				}	              	
+	        },
+	        error:function(e){
+	          alert("发生错误！！-index");
+	        } 
+	      });
+	 
+	 $("#confirmPost").click(function(e) {
+			var selCategory = $("#selCategory").val();
+			$("#categoryId").val(selCategory);
+			if(selCategory ==''){
+				layer.msg('请选择文章分类~');
+			}else{
+				layer.msg('文章发布中...');
+				$.ajax({
+			    	url:"/api/blog/saveBlog",
+			        type:"POST",
+			        dataType:'json',
+			        data: $('#blog_form').serialize(), 
+			        success:function(result){
+			        	if (result!= null) {
+			        		if (result.code!='1000') {
+			        			layer.msg('发布失败~');			        			
+			  			    }else{
+			  			    	layer.closeAll('page');
+			  			    	layer.msg('发布成功~');
+			  			    	alert(result.data);
+			  			    	$('#viewBlog').attr('href','detail.html?id='+result.data); 
+			  			    	layer.open({
+			  				        title:'发布成功',
+			  				        type: 1,
+			  				        skin: 'layui-layer-rim', 
+			  				        area: ['500px', '280px'], 
+			  				        content: $('#successArea')
+			  				   });	
+			  			    }  	        		
+						} else {
+							alert("请求失败!")
+						}	              	
+			        },
+			        error:function(e){
+			          alert("发生错误！！");
+			        } 
+			      });
+			}
+		});
+});
+layui.use('layer', function(){
+	  var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+});
+KindEditor.ready(function(K) {
+	var editor1 = K.create('textarea[name="editor"]', {
+		cssPath : '/static/js/kindeditor/plugins/code/prettify.css',
+		uploadJson : '/static/js/kindeditor/jsp/upload_json.jsp',
+		fileManagerJson : '/static/js/kindeditor/file_manager_json.jsp',
+		allowFileManager : true,
+		afterCreate : function() {
+			var self = this;
+			K.ctrl(document, 13, function() {
+				self.sync();
+				document.forms['blog_form'].submit();
+			});
+			K.ctrl(self.edit.doc, 13, function() {
+				self.sync();
+				document.forms['blog_form'].submit();
+			});
+		}
+	});
+	prettyPrint();
+	$('#btn-fabu').click(function(e) {
+		var content = editor1.html();
+		var shortDesc = editor1.text();
+		var selType = $("#selType").val();
+		var txtTitle = $("#txtTitle").val();
+		if(selType == '0'){
+			layer.msg('请选择文章类型~');
+		}else if(txtTitle == ''){
+			layer.msg('请输入文章标题~');
+		}else if(content=='' || shortDesc==''){
+			layer.msg('请输入文章内容~');
+		}else{
+			$("#content").val(content);
+			$("#shortDesc").val(shortDesc);
+			layer.open({
+		        title:'博客发布',
+		        type: 1,
+		        skin: 'layui-layer-rim', 
+		        area: ['500px', '280px'], 
+		        content: $('#categoryArea')
+		   });					
+		}
+	});
+});
+
+function getContextPath() {
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var result = pathName.substr(0, index + 1);
+	return result;
+}
+</script>
+</head>
+<body>
+	<div id="container" style="margin-top: 100px;">
+		<form name="blog_form" id="blog_form" method="post" action="#">
+	     <div id="editor_box">
+			 <div id="top_area">
+			    <select id="selType" name="type">
+                    <option value="0">请选择</option>
+                    <option value="original">原创</option>
+                    <option value="repost">转载</option>
+                </select>
+                <input type="text" id="txtTitle" name="title" maxlength="100" placeholder="输入文章标题">
+				<input type="button" id="btn-fabu" value="发布博客" >
+			 </div>
+			 <div id="editor_area">
+				 <textarea name="editor" cols="100" rows="8" style="width:100%;height:400px;visibility:hidden;"></textarea>
+			 </div>
+			 <textarea name="content" id="content" style="display: none;"></textarea>
+			 <textarea name="shortDesc" id="shortDesc"  style="display: none;"></textarea>
+			 <input type="hidden" name="categoryId" id="categoryId">
+        </div>
+		</form>
+		<div id="categoryArea" style="display: none; text-align: center;"></div>
+		<div id="successArea" style="padding-top:15%;display:none;text-align:center; margin: 0 auto;">
+		     <ul style="list-style-type: none;">		         
+		         <li class="sucesli"><a href="write.html" class="sucesa">写新文章</a></li>
+		         <li class="sucesli"><a href="list.html" class="sucesa">文章列表</a></li>
+		         <li class="sucesli"><a href="#" class="sucesa" id="viewBlog">查看文章</a></li>		         
+		     </ul> 	      
+	</div>
+	</div>
+	<iframe src="../sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script type="text/javascript" src="/static/js/checklogin.js"></script>
+</body>
+</html>

@@ -1,0 +1,130 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>邮箱验证</title>
+<link rel="shortcut icon" href="/static/image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="/static/style/base.css">
+<link rel="stylesheet" href="/static/style/register/base.css" />
+<link rel="stylesheet" href="/static/style/register/layout.css"/>
+<script type="text/javascript" src="/static/js/header.js"></script>
+</head>
+<body>
+	<div id="wrapper">
+		<div class="container w960 mt20">
+			<!-- 邮箱注册流程 -->
+			<div id="emailRegProcessor" style="padding-top: 60px;">
+				<ol class="processorBox oh">
+					<li class="current">
+						<div class="step_inner fl">
+							<span class="icon_step">1</span>
+							<h4>邮箱验证</h4>
+						</div>
+					</li>
+					<li>
+						<div class="step_inner fr">
+							<span class="icon_step">2</span>
+							<h4>完成注册</h4>
+						</div>
+					</li>
+				</ol>
+				<div class="step_line_mobile"></div>
+			</div>
+			<!--注册表单 -->
+			<div class="content" id="mobileRegContent">
+				<div id="step1" class="step hide">
+					<div class="w330">
+						<strong class="f16">&nbsp;&nbsp;&nbsp;您的账号还未激活需要验证邮箱,验证邮件已发送至你的注册邮箱:<span id="userEmail" style="color: red"></span></strong>
+						<p class="c7b">请进入邮箱查看邮件，并激活平台帐号。</p>
+						<p><a class="btn btn_primary mt20" href="#" id="linkEmail" target="_blank">登录邮箱</a></p>
+						<p class="c7b mt20">没有收到邮件？</p>
+						<p>1. 检查你的邮件垃圾箱</p>
+						<p>2. 若仍未收到确认，请尝试 <a href="#" class="c46" id="reSendMail">重新发送</a></p>
+						<p>1. 请检查邮箱地址是否正确，你可以 <a href="#" class="c46">更换邮箱</a></p>					
+					</div>
+				</div><!-- // step2 end -->
+				<div id="step2" class="step hide">
+					<div class="w330">
+						<strong class="f16">用户已激活!</strong>
+					</div>
+				</div><!-- // step3 end -->
+			</div>			
+		</div><!-- // container end -->
+	</div><!-- // wrapper end -->
+	<iframe src="sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="/static/js/jquery-3.2.1.min.js"></script>
+	<script> 		
+		$(function() {
+			var projectPath=getContextPath();
+			$.ajax({
+				url: projectPath+"/api/user/logincheck",
+				type: "POST",
+				dataType: 'json',
+				data: null,
+				success: function (result) {					
+					if (result.code=='1000') {
+						setTimeout("javascript:location.href='index.html'", 1000);
+					}else if(result.code=='1009'){
+						 var userEmail=result.data.email;
+						  $('#userEmail').html(userEmail);
+						  var MailLink = userEmail.split("@")[1];
+						  $("#linkEmail").attr("href","http://mail."+MailLink);
+				    }else {
+					    setTimeout("javascript:location.href='login.html'", 1000);
+				    }
+			    },
+			    error: function (e) {
+					alert("错误！！");
+				}
+			});
+
+			$('#reSendMail').click(function () {
+				$.ajax({
+					url: projectPath+"/api/user/sendVerifyEmail",
+					type: "get",
+					dataType: 'json',
+					data: null,
+					success: function (result) {
+						if (result.code != '1000') {
+							showTips(result.info);
+						} else {
+							showTips('邮件已成功发送!', 1500, 1);
+						}
+					},
+					error: function (e) {
+						alert("1111错误！！");
+					}
+				});
+			});
+		});
+
+			//用于生成uuid
+			function S4() {
+				return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+			}
+
+			function guid() {
+				return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+			}
+
+			//显示提示框，目前三个参数(txt：要显示的文本；time：自动关闭的时间（不设置的话默认1500毫秒）；status：默认0为错误提示，1为正确提示；)
+			function showTips(txt, time, status) {
+				var htmlCon = '';
+				if (txt != '') {
+					if (status != 0 && status != undefined) {
+						htmlCon = '<div class="tipsBox" style="width:220px;padding:10px;background-color:#4AAF33;border-radius:4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;color:#fff;box-shadow:0 0 3px #ddd inset;-webkit-box-shadow: 0 0 3px #ddd inset;text-align:center;position:fixed;top:25%;left:50%;z-index:999999;margin-left:-120px;"><img src="/static/image/ok.png" style="vertical-align: middle;margin-right:5px;" alt="OK，"/>' + txt + '</div>';
+					} else {
+						htmlCon = '<div class="tipsBox" style="width:220px;padding:10px;background-color:#D84C31;border-radius:4px;-webkit-border-radius: 4px;-moz-border-radius: 4px;color:#fff;box-shadow:0 0 3px #ddd inset;-webkit-box-shadow: 0 0 3px #ddd inset;text-align:center;position:fixed;top:25%;left:50%;z-index:999999;margin-left:-120px;"><img src="/static/image/err.png" style="vertical-align: middle;margin-right:5px;" alt="Error，"/>' + txt + '</div>';
+					}
+					$('body').prepend(htmlCon);
+					if (time == '' || time == undefined) {
+						time = 1500;
+					}
+					setTimeout(function () {
+						$('.tipsBox').remove();
+					}, time);
+				}
+			}
+	</script>
+</body>
+</html>

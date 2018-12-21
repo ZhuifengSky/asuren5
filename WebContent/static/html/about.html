@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+		<meta http-equiv="Content-Type" content="text/x-component" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>关于本站</title>
+		<link rel="stylesheet" type="text/css" href="/static/style/about.css">
+	</head>
+
+	<body>
+		<!--背景开始-->
+		<!--<div class="about_bg"></div>-->
+		<!--背景结束-->
+		<script type="text/javascript" src="/static/js/header.js"></script>
+		<div id="container" style="margin-top: 100px;">
+		<div>
+			<div class="about_content history">
+				<h2>关于本站</h2>
+				<p class="about_txt">用心  点滴  积累</p>
+			</div>
+			<div class="event_box">
+				<div class="space_div">
+					<p class="left_space"></p>
+					<p class="right_space"></p>
+				</div>
+				<div class="parHd clearfix">
+					<ul>
+						<li>2017.11.11</li>
+						<li>2018.05.05</li>
+						<li>2018.05.15</li>
+					</ul>
+					<!--<a class="sPrev"><img src="/static/image/left_ico.png" alt="" title=""></a>-->
+					<!--<a class="sNext"><img src="/static/image/right_ico.png" alt="" title=""></a>-->
+				</div>
+				<div class="parBd clearfix">
+					<div class="slideBox">
+						<h4>【1】搭设环境,启动开发</h4>
+						<p>搭设环境,启动开发</p>
+					</div>
+					<div class="slideBox" style="display: none;">
+						<h4>【2】开发完成</h4>
+						<p>开发完成</p>
+					</div>
+					<div class="slideBox" style="display: none;">
+						<h4>【3】部署上线</h4>
+						<p>部署上线</p>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+		<iframe src="sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+		<script>
+			$(function() {
+				jQuery(".event_box").slide({ titCell: ".parHd li", mainCell: ".parBd", defaultPlay: false, titOnClassName: "act", prevCell: ".sPrev", nextCell: ".sNext",pnLoop:false });
+				jQuery(".parHd").slide({ mainCell: " ul", vis: 6, effect: "left", defaultPlay: false, prevCell: ".sPrev", nextCell: ".sNext" ,pnLoop:false,autoPage:true}) 
+			});
+		</script>
+		<script src="/static/js/jquery.min.js"></script>
+		<script type="text/javascript" src="/static/js/jquery.SuperSlide2.1.2.js"></script>
+	</body>
+</html>

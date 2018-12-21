@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.service.modules.dailyWords.dao.DailyWordsDao">
+  <resultMap id="BaseResultMap" type="cn.service.modules.dailyWords.model.DailyWords">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="show_time" jdbcType="DATE" property="showTime" />
+    <result column="words" jdbcType="VARCHAR" property="words" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="create_by" jdbcType="INTEGER" property="createBy" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, show_time, words, create_date, create_by
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from daily_words
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from daily_words
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.service.modules.dailyWords.model.DailyWords">
+    insert into daily_words (id, show_time, words, 
+      create_date, create_by)
+    values (#{id,jdbcType=INTEGER}, #{showTime,jdbcType=DATE}, #{words,jdbcType=VARCHAR}, 
+      #{createDate,jdbcType=TIMESTAMP}, #{createBy,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.service.modules.dailyWords.model.DailyWords">
+    insert into daily_words
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="wordsId!= null">
+        words_id,
+      </if>
+      <if test="showTime != null">
+        show_time,
+      </if>
+      <if test="words != null">
+        words,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="wordsId != null">
+        #{wordsId,jdbcType=INTEGER},
+      </if>
+      <if test="showTime != null">
+        #{showTime,jdbcType=DATE},
+      </if>
+      <if test="words != null">
+        #{words,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.service.modules.dailyWords.model.DailyWords">
+    update daily_words
+    <set>
+      <if test="showTime != null">
+        show_time = #{showTime,jdbcType=DATE},
+      </if>
+      <if test="words != null">
+        words = #{words,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="createBy != null">
+        create_by = #{createBy,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.service.modules.dailyWords.model.DailyWords">
+    update daily_words
+    set show_time = #{showTime,jdbcType=DATE},
+      words = #{words,jdbcType=VARCHAR},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      create_by = #{createBy,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="getDailyWords" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from daily_words
+    where show_time = #{showDate} limit 1
+  </select>
+</mapper>

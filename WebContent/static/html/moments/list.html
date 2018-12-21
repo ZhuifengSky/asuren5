@@ -1,0 +1,120 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>随笔心情</title>
+<link rel="shortcut icon" href="../../image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="../../style/base.css">
+<link rel="stylesheet" type="text/css" href="../../style/moments/moments.css">
+<link rel="stylesheet" href="../../js/layui-master/src/css/layui.css">
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<link rel="stylesheet" href="../../style/jquery.pagination.css" />
+<script src="../../js/layui-master/src/layui.js"></script>
+<script type="text/javascript" src="../../js/header.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){
+   goPage();
+});
+
+
+function goPage() {
+	var projectPath=getContextPath();
+	var pageNum=1;
+	var page = GetQueryString("page");
+	if (page!=null && (/(^[1-9]\d*$)/.test(page))) { 
+		pageNum=page;
+	}
+	$.ajax({
+		url:projectPath+"/api/moments/getMoments?pageNum="+pageNum,
+        type:"GET",
+        dataType:'json',
+        async: false,
+        data: null, 
+        success:function(result){
+        	if (result!= null) {
+        		if (result.code!='1000') {
+  	        	  // alert(result.info);
+  			    }else{
+  			    	var dataObj = eval(result.data.list);// 转换为json对象
+					var moments_list = "";
+					// 遍历json数组
+					$.each(dataObj, function(i, item) {
+						var id = item.id;
+						moments_list+= "<div class='moments'> <div class='moment_content' style='height:  85%;'>";
+						moments_list+= "<img src='"+item.imageUrl+"' alt='img' class='moments_img' />";
+						if(id%2==0){
+							moments_list+= "<p class='moments_txt'><span class='beatText'>"+item.content+"</span></p></div>";
+						}else{
+							moments_list+= "<p class='moments_txt'><span class='rotateText'>"+item.content+"</span></p></div>";
+						}
+						moments_list+= "<div class='moment_dateInfo'><span><a href='#' style='font-size: smaller;font-family: cursive;'>"+item.userName+"</a>&nbsp;发表于&nbsp;"+item.createDate+"</span>";
+						moments_list+= "</div></div>";
+					});
+                    $("#moments-show").html(moments_list);
+					$("#pagination3").pagination({
+						currentPage: result.data.pageNum,//当前页码
+						totalPage: result.data.pages,//总页数,
+						isShow: true,
+						count: result.data.total,//总数目
+						homePageText: "首页",
+						endPageText: "尾页",
+						prevPageText: "上一页",
+						nextPageText: "下一页",
+						callback: function(current) {
+							window.location.href='list.html?page='+current;
+						}
+					});
+				}
+			} else {
+				alert("请求失败!")
+			}
+
+
+			/*
+			 *  参数详解:
+			 *	upTime			上移的时间
+			 *	downTime		下落的时间
+			 *	beatHeight		上移高度
+			 *	isAuth			是否自动
+			 *	isRotate		是否旋转
+			 */
+			$('span.beatText').beatText({isAuth:false,isRotate:false});
+			$('span.rotateText').beatText({isAuth:false,isRotate:true});
+		},
+		error:function(e){
+			alert("发生错误！！");
+		}
+	});
+}
+function getContextPath() {
+	var pathName = document.location.pathname;
+	var index = pathName.substr(1).indexOf("/");
+	var result = pathName.substr(0, index + 1);
+	return result;
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+</script>
+</head>
+<body>
+	<div class="container">
+	    <div style="margin: 0 auto;width: 95%;background-color: white;padding-top: 6%;min-height: 900px;">
+			<div id="moments-show"></div>
+		    <div class="box" style="text-align: center;">
+					<div id="pagination3" class="page fl"></div>
+			</div>
+		</div>	
+	</div>
+	<iframe src="../sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="../../js/jquery.pagination.min.js"></script>
+	<script type="text/javascript" src="../../js/check.js"></script>
+	<script type="text/javascript" src="../../js/jquery.beattext.js"></script>
+	<script type="text/javascript" src="../../js/easying.js"></script>
+</body>
+</html>

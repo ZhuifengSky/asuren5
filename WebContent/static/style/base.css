@@ -1,0 +1,49 @@
+body{
+    margin: 0 auto;
+    background-color: #f4f4f4;
+    font-family: "raleway-regular", arial;
+    font-size: 14px;
+}
+
+#container{
+    margin: 0 auto;
+    background-color: #f4f4f4;
+    width: 95%;
+    height:100%;
+    padding-bottom: 100px;
+}
+
+
+.modal-header {
+    min-height: 16.43px;
+    padding: 15px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.modal-content{
+    background-color: white;
+    -webkit-box-shadow: 0 3px 9px rgba(0,0,0,.5);
+}
+.footerframe{
+	width: 100%;
+	height: 80px;
+	margin-top: 30px;
+}
+
+/*涓嬮潰涓や釜鏄牳蹇冩牱寮�*/
+.beat-char {
+    position: relative;
+    display: inline-block;
+    background: transparent;
+
+}
+
+.rotate{
+    transform:rotate(360deg) ;
+    -ms-transform:rotate(360deg); 	/* IE 9 */
+    -moz-transform:rotate(360deg); 	/* Firefox */
+    -webkit-transform:rotate(360deg); /* Safari 鍜� Chrome */
+    -o-transform:rotate(360deg);
+    -webkit-transition-duration: 0.7s;
+
+}

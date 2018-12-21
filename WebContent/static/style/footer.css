@@ -1,0 +1,25 @@
+body{
+	margin: 0 auto;
+	width: 100%;
+	background-color: #f4f4f4;
+    font-family: "raleway-regular", arial;
+    font-size: 13px;
+}
+#footer {
+    width: 100%;
+    z-index: 5;
+    height: 60px;
+    background-color: #222222;
+    text-align: center;
+    margin-top: 20px;
+    color: white;
+}
+.links{
+    padding-top: 10px;
+}
+.links a{
+    text-decoration: none;
+    color: #e4dfdf;
+}
+
+

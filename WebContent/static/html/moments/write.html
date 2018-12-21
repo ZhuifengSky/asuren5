@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>随笔心情</title>
+<link rel="shortcut icon" href="../../image/susu.ico" />
+<link rel="stylesheet" type="text/css" href="../../style/base.css">
+<link rel="stylesheet" type="text/css" href="../../style/moments/moments.css">
+<link rel="stylesheet" href="../../js/layui-master/src/css/layui.css">
+<script src="../../js/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../js/header.js"></script>
+<script type="text/javascript">
+
+$(document).ready(function(){		
+	/*
+	 *  参数详解:
+	 *	upTime			上移的时间
+	 *	downTime		下落的时间
+	 *	beatHeight		上移高度
+	 *	isAuth			是否自动
+	 *	isRotate		是否旋转
+	 */
+
+	$('p#beatText').beatText({isAuth:false,isRotate:false});
+	$('p#rotateText').beatText({isAuth:false,isRotate:true});
+});
+
+function getContextPath() {
+	return '';
+}
+
+function GetQueryString(name)
+{
+     var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+     var r = window.location.search.substr(1).match(reg);
+     if(r!=null)return  unescape(r[2]); return null;
+}
+function onFileUploadimg(bt, columnname) {
+	var projectPath=getContextPath();
+	$.ajaxFileUpload({
+		url : projectPath+"/api/moments/uploadImage",
+		type: 'post',
+		secureuri : false,
+		fileElementId : bt.id,
+		dataType : 'json',
+		data : {},
+		success : function(result, status) {
+
+			if (result.resultCode == '1001') {
+				alert("请选择图片!");
+				return false;
+			} else if(result.resultCode == '1002'){
+				alert("图片格式不正确，请确认!");
+				return false;
+			}
+			else{
+				alert("上传成功");
+				uploadCallback(result.message, columnname);
+			}
+		},
+		error : function(result, status, e) {
+			alert(e);
+		}
+	});
+	return false;
+
+}
+
+function uploadCallback(url, id) {
+	$("#"+id).val(url);
+	$("#imageUrl_show").hide();
+	//url='http://picm.photophoto.cn/005/008/007/0080071498.jpg';
+	$('#' + id + '_file').after($('<a id="'+ id+'_show" href="javascript:;" onclick="javascript:showImage(\''
+			+ url + '\')">预览图片</a>'));
+}
+
+function showImage(url) {
+	$.blockUI({
+		css : {
+			top : '35%',
+			left : '35%',
+			cursor : null
+		},
+		message : ' <img  src="'+url+'"/>',
+	});
+	$('.blockOverlay').attr('title', 'Click to unblock').click($.unblockUI);
+}
+function hideBlock() {
+	jQuery.unblockUI();
+}
+</script>
+</head>
+<body>
+	<div class="container">
+		<div style="margin: 0 auto;width: 95%;background-color: white;padding-top: 8%;min-height: 900px;">
+			<form class="layui-form" id="momentsForm" method="post" action="/asuren5/api/moments/saveMoments" style="width: 60%;margin:  0 auto;">
+				<table>
+					<tr>
+						<td>图片:</td>
+						<td>
+							<input type="hidden" name="imageUrl"  id="imageUrl" style="margin-bottom: 15px">
+							<input id="imageUrl_file" type="file" name="file" onchange="return onFileUploadimg(this,'imageUrl');" />
+						</td>
+					</tr>
+					<tr style="height: 20px"><td colspan="2"></td></tr>
+					<tr>
+						<td>内容:</td>
+						<td>
+							<input type="hidden" name="content" id="content" style="display: none">
+							<textarea name="messageText" id="messageText" style="display: none"></textarea>
+							<div id="editor"></div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<input type="button" class="fb_btn" id="fab" value="发表" style="width:  100px;float:  right;">
+						</td>
+					</tr>
+				</table>
+		   </form>
+		</div>
+	</div>
+	<iframe src="../sys/footer.html" style="width: 100%;height: 80px;margin-top: 30px;"></iframe>
+	<script src="../../js/jquery.pagination.min.js"></script>
+	<script type="text/javascript" src="../../js/check.js"></script>
+	<script type="text/javascript" src="../../js/jquery.beattext.js"></script>
+	<script src="../../js/layui-master/src/layui.js"></script>
+	<script type="text/javascript" src="../../js/ajaxfileupload.js"></script>
+	<script src="../../js/jquery-migrate-1.2.1.js"></script>
+	<script charset="utf-8" src="../../js/jquery-ui-1.11.4/jquery.blockUI.js"></script>
+	<script type="text/javascript" src="../../js/wangEditor-3.0.15/release/wangEditor.min.js"></script>
+	<script type="text/javascript">
+		var E = window.wangEditor
+		var editor = new E('#editor')
+		editor.customConfig.menus = [
+			'head',  // 标题
+			'bold',  // 粗体
+			'fontSize',  // 字号
+			'fontName',  // 字体
+			'italic',  // 斜体
+			'underline',  // 下划线
+			'strikeThrough',  // 删除线
+			'foreColor',  // 文字颜色
+			'backColor',  // 背景颜色
+			'link',  // 插入链接
+			'list',  // 列表
+			'justify',  // 对齐方式
+			'quote',  // 引用
+			'emoticon' // 表情
+			//'image',  // 插入图片
+			//'table',  // 表格
+			//'video',  // 插入视频
+			//'code',  // 插入代码
+			//'undo',  // 撤销
+			//'redo'  // 重复
+		]
+		// 通过 url 参数配置 debug 模式。url 中带有 wangeditor_debug_mode=1 才会开启 debug 模式
+		editor.customConfig.debug = location.href.indexOf('wangeditor_debug_mode=1') > 0
+		// 或者 var editor = new E( document.getElementById('editor') )
+		editor.create()
+		$("#fab").click(function(){
+			var content=editor.txt.html();
+			var contentText=editor.txt.text();
+			if(contentText==null || contentText==''){
+				layer.msg('请输入内容~');
+				return false;
+			}else{
+				var projectPath=getContextPath();
+				$("#content").val(contentText);
+				$("#contentText").val(contentText);
+				$.ajax({
+					url:projectPath+"/api/moments/saveMoments",
+					type:"post",
+					dataType:'json',
+					data: $('#momentsForm').serialize(),
+					success:function(result){
+						if (result!= null) {
+							if (result.code!='1000') {
+								if(result.code=='1111'){
+									layer.msg("请先登录,3秒后自动跳转！");
+									setTimeout(function(){//两秒后跳转
+										location.href = "../login.html";//PC网页式跳转
+									},3000);
+								}else{
+									layer.msg(result.info);
+								}
+							}else{
+								layer.msg('发表成功!');
+								location.href = "list.html";//PC网页式跳转  面.
+							}
+						} else {
+							alert("请求失败!")
+						}
+					},
+					error:function(e){
+						alert("发生错误！！-index");
+					}
+				});
+			}
+		});
+		layui.use('layer', function(){
+			var $ = layui.jquery, layer = layui.layer; //独立版的layer无需执行这一句
+		});
+	</script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.service.modules.blog.dao.BlogDao">
+  <resultMap id="BaseResultMap" type="cn.service.modules.blog.model.Blog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="short_desc" jdbcType="VARCHAR" property="shortDesc" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
+    <result column="view_num" jdbcType="INTEGER" property="viewNum" />
+    <result column="comment_num" jdbcType="INTEGER" property="commentNum" />
+    <result column="create_date" jdbcType="TIMESTAMP" property="createDate" />
+    <result column="update_date" jdbcType="TIMESTAMP" property="updateDate" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="cn.service.modules.blog.model.Blog">
+    <result column="content" jdbcType="VARCHAR" property="content" typeHandler="cn.service.common.util.MyBlobTypeHandler"/>
+  </resultMap>
+  
+  <resultMap id="ListResultMap" type="cn.service.modules.blog.bean.BlogBean">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="imageUrl" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="shortDesc" jdbcType="VARCHAR" property="shortDesc" />
+    <result column="content" jdbcType="VARCHAR" property="content" typeHandler="cn.service.common.util.MyBlobTypeHandler"/>
+    <result column="viewNum" jdbcType="INTEGER" property="viewNum" />
+    <result column="commentNum" jdbcType="INTEGER" property="commentNum" />
+    <result column="updateDate" jdbcType="TIMESTAMP" property="updateDate" />
+    <association property="userBean" javaType="cn.service.modules.user.bean.UserBean">
+       <id column="userId" jdbcType="INTEGER" property="id"/>
+       <result column="userName" jdbcType="VARCHAR" property="userName" />
+       <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    </association>
+    <association property="categoryBean" javaType="cn.service.modules.category.bean.CategoryBean">
+       <id column="categoryId" jdbcType="INTEGER" property="id"/>
+       <result column="categoryName" jdbcType="VARCHAR" property="categoryName" />
+    </association>
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    id, title, image_url, short_desc, user_id, category_id, view_num, comment_num, create_date, 
+    update_date
+  </sql>
+  <sql id="Blob_Column_List">
+    content
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="ListResultMap">
+   select b.id,b.type,b.title,b.image_url as imageUrl,b.short_desc as shortDesc,b.view_num as viewNum,
+           b.comment_num as commentNum,b.update_date as updateDate,b.content as content,
+           u.id as userId,u.username as userName,u.avatar as avatar,c.id as categoryId,c.category_name as categoryName
+    from blog b
+      inner join `user` u ON b.user_id=u.id
+      inner join category c ON b.category_id=c.id
+    where b.id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from blog
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.service.modules.blog.model.Blog">
+    insert into blog (id, title, image_url, 
+      short_desc, user_id, category_id, 
+      view_num, comment_num, create_date, 
+      update_date, content)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{imageUrl,jdbcType=VARCHAR}, 
+      #{shortDesc,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{categoryId,jdbcType=INTEGER},
+      #{viewNum,jdbcType=INTEGER}, #{commentNum,jdbcType=INTEGER}, #{createDate,jdbcType=TIMESTAMP}, 
+      #{updateDate,jdbcType=TIMESTAMP}, #{content,jdbcType=LONGVARBINARY})
+  </insert>
+  <insert id="insertSelective" useGeneratedKeys="true" keyProperty="id" parameterType="cn.service.modules.blog.model.Blog">
+    insert into blog
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="title != null">
+        title,
+      </if>
+      <if test="imageUrl != null">
+        image_url,
+      </if>
+      <if test="shortDesc != null">
+        short_desc,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="categoryId != null">
+        category_id,
+      </if>
+      <if test="viewNum != null">
+        view_num,
+      </if>
+      <if test="commentNum != null">
+        comment_num,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=VARCHAR},
+      </if>
+       <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shortDesc != null">
+        #{shortDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="viewNum != null">
+        #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        #{content},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.service.modules.blog.model.Blog">
+    update blog
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="imageUrl != null">
+        image_url = #{imageUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="shortDesc != null">
+        short_desc = #{shortDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="categoryId != null">
+        category_id = #{categoryId,jdbcType=INTEGER},
+      </if>
+      <if test="viewNum != null">
+        view_num = #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null">
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="createDate != null">
+        create_date = #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=LONGVARBINARY},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="cn.service.modules.blog.model.Blog">
+    update blog
+    set title = #{title,jdbcType=VARCHAR},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      short_desc = #{shortDesc,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      view_num = #{viewNum,jdbcType=INTEGER},
+      comment_num = #{commentNum,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP},
+      content = #{content,jdbcType=LONGVARBINARY}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.service.modules.blog.model.Blog">
+    update blog
+    set title = #{title,jdbcType=VARCHAR},
+      image_url = #{imageUrl,jdbcType=VARCHAR},
+      short_short_desc = #{shortDesc,jdbcType=VARCHAR},
+      user_id = #{userId,jdbcType=INTEGER},
+      category_id = #{categoryId,jdbcType=INTEGER},
+      view_num = #{viewNum,jdbcType=INTEGER},
+      comment_num = #{commentNum,jdbcType=INTEGER},
+      create_date = #{createDate,jdbcType=TIMESTAMP},
+      update_date = #{updateDate,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <select id="findList" parameterType="cn.service.modules.blog.model.Blog" resultMap="ListResultMap">
+    select b.id,b.title,b.image_url as imageUrl,b.short_desc as shortDesc,b.view_num as viewNum,
+           b.comment_num as commentNum,b.update_date as updateDate,
+           u.id as userId,u.username as userName,c.id as categoryId,c.category_name as cateGoryName
+    from blog b
+      inner join `user` u ON b.user_id=u.id
+      inner join category c ON b.category_id=c.id
+    <where>
+      <if test="userId!=null and userId!=''">
+          and b.user_id=#{userId}
+      </if>
+      <if test="categoryId!=null and categoryId!=''">
+        and b.category_id=#{categoryId}
+      </if>
+    </where>
+  </select>
+  
+  <update id="upNum" parameterType="cn.service.modules.blog.model.Blog">
+    update blog
+    <set>    
+      <if test="viewNum != null and viewNum!=0">
+        view_num = #{viewNum,jdbcType=INTEGER},
+      </if>
+      <if test="commentNum != null and commentNum!=0">
+        comment_num = #{commentNum,jdbcType=INTEGER},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>    
+  
+  <select id="getTypeBlogList" parameterType="cn.service.modules.blog.bean.BlogQueryBean" resultType="cn.service.modules.blog.bean.BlogListBean">
+      SELECT b.id,b.title FROM blog b
+	  <where>
+	      <if test="dateFrom!=null and dateFrom!=''">
+	        and b.create_date <![CDATA[ >= ]]>#{dateFrom}
+	      </if>
+	      <if test="dateTo!=null and dateTo!=''">
+	        and b.create_date <![CDATA[ <= ]]>#{dateTo}
+	     </if>
+	     <if test="type=='recomend'">
+	        and b.recommend=1
+	     </if>
+	  </where>	  
+		  <if test="type=='hot'">
+		     ORDER BY b.view_num DESC
+		  </if>
+		  <if test="type=='new'">
+		     ORDER BY b.create_date DESC 
+		  </if>
+         limit #{num} 
+  </select>
+  
+  
+  
+</mapper>
